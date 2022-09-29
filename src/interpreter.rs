@@ -10,5 +10,11 @@ pub fn eval_instructions(instructions: Vec<Instruction>) {
         Instruction::Arithmetic(a, b, c) => todo!(),
         Instruction::Branch(a, b) => todo!(),
         Instruction::Fence => todo!(),
+        Instruction::Syscall => todo!(),
     });
+}
+
+#[test]
+fn test_instructions() {
+    println!("Ins")
 }
