@@ -7,3 +7,5 @@ target = {
     // extra settings. NOTE: maybe allow the VM to link against this directly? Or include this
     phantasm_ir = {}
 }
+
+config = [LowMemoryFootprint]
