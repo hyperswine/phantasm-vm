@@ -2,6 +2,9 @@ use elf
 use riscv
 use arm
 
+// log is implemented on core:: for riscv and arm at specific serial addresses
+// you can reimpl or load your own logger with a custom serial addr or another method
+
 # NOTE: the main fn in a core executable is becomes _main:, not _start:
 # "command line arguments" aren't supported
 main: () {
@@ -12,7 +15,7 @@ main: () {
     DRAM.start()
 
     // basic settings
-    SP.set(0x4000_0000)
+    SP.set(0x4000_0001)
     // note: I dunno if you can just move each part? eh dw about it just copy for now since arcboot prob wont be too big anyway
     // confirm M-mode
     EXECUTION_MODE.set(Machine)
