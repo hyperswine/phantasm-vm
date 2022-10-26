@@ -1,16 +1,15 @@
-use phantasm_ir::ir::Instruction;
+use phantasm_ir::spectre_ir::*;
 
 // pretty much the view of each individual processor
 
 /// Interpreter for phantasm IR
-pub fn eval_instructions(instructions: Vec<Instruction>) {
+pub fn eval_instructions(instructions: Vec<SpectreInstruction>) {
     instructions.iter().for_each(|f| match f {
-        Instruction::Load(a, b, c) => todo!(),
-        Instruction::Store(a, b, c) => todo!(),
-        Instruction::Arithmetic(a, b, c) => todo!(),
-        Instruction::Branch(a, b) => todo!(),
-        Instruction::Fence => todo!(),
-        Instruction::Syscall => todo!(),
+        SpectreInstruction::Arithemtic(a, b, c) => todo!(),
+        SpectreInstruction::Bitwise(b) => todo!(),
+        SpectreInstruction::Jump(a) => todo!(),
+        SpectreInstruction::Yield => todo!(),
+        SpectreInstruction::Return => todo!(),
     });
 }
 
