@@ -8,3 +8,4 @@ license-file = "LICENSE"
 
 [dependencies]
 phantasm-ir = { git = "https://github.com/hyperswine/phantasm.git" }
+derive-new = "0.5"
