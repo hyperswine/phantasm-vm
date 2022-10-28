@@ -54,15 +54,58 @@ pub struct Function {
 pub struct WaitList(CircularBuffer<Function, 1024>);
 
 #[derive(Debug, Clone, Copy, Default, new)]
-pub struct Executor;
+pub enum Executor {
+    #[default]
+    IExecutor,
+    DExecutor,
+}
+
+#[derive(Debug, Clone, Copy, Default, new)]
+pub enum ExecutorComplex {
+    #[default]
+    IComplex,
+    DComplex,
+}
+
+#[derive(Debug, Clone, Copy, Default, new)]
+pub enum AcceleratorUnit {
+    #[default]
+    Sha256,
+    Discretizer,
+    Lookup,
+}
+
+#[derive(Debug, Clone, Copy, Default, new)]
+pub struct AcceleratorQueue(CircularBuffer<Function, 128>);
 
 #[derive(Debug, Clone, Copy, new)]
-pub struct ExecutorComplex {
+pub struct IComplex {
+    queue: CircularBuffer<Function, 256>,
+    executors: [Executor; 64],
+    accelerator_queue: AcceleratorQueue,
+    local_cache: Cache20KB,
+    accelerators: [AcceleratorUnit; 32],
+}
+
+#[derive(Debug, Clone, Copy, new)]
+pub struct DComplex {
     queue: CircularBuffer<Function, 256>,
     executors: [Executor; 64],
 }
 
-impl Default for ExecutorComplex {
+impl Default for IComplex {
+    fn default() -> Self {
+        Self {
+            queue: Default::default(),
+            executors: [Default::default(); 64],
+            accelerator_queue: Default::default(),
+            local_cache: Default::default(),
+            accelerators: Default::default(),
+        }
+    }
+}
+
+impl Default for DComplex {
     fn default() -> Self {
         Self {
             queue: Default::default(),
