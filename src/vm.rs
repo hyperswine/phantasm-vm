@@ -6,6 +6,12 @@ use derive_new::new;
 
 pub type Byte = u8;
 
+macro_rules! DefaultVec {
+    ($x:item) => {
+        // do the impl thing with yea
+    };
+}
+
 #[derive(Debug, Clone, Copy, new)]
 pub struct Cache<const SIZE: usize>([Byte; SIZE]);
 
