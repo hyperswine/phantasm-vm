@@ -1,4 +1,6 @@
 pub mod interpreter;
-pub mod bios;
 pub mod vm;
-pub mod vm_risc;
+pub mod imperative;
+
+#[macro_use]
+extern crate macro_rules_attribute;
