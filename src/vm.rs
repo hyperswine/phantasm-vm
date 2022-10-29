@@ -3,7 +3,11 @@
 */
 
 use derive_new::new;
-use phantasm_ir::spectre_ir::Instructions;
+use phantasm_ir::spectre_ir::{Instructions, SpectreInstruction};
+use std::{
+    intrinsics::size_of,
+    ptr::{read_volatile, write_volatile},
+};
 
 use crate::interpreter::eval_instructions;
 
@@ -62,10 +66,37 @@ pub struct Function {
 pub struct WaitList(CircularBuffer<Function, 1024>);
 
 #[derive(Debug, Clone, Copy, Default, new)]
-pub enum Executor {
+pub enum ExecutorType {
     #[default]
     IExecutor,
     DExecutor,
+}
+
+pub type StackPointer = u64;
+pub type InstructionPointer = u64;
+
+#[derive(Debug, Clone, Copy, Default, new)]
+pub struct Executor(ExecutorType, StackPointer, InstructionPointer);
+
+impl Executor {
+    pub fn next_instruction(&mut self) -> SpectreInstruction {
+        self.2 += size_of::<SpectreInstruction>() as u64;
+        // read the instruction at the point
+        unsafe { read_volatile(self.2 as *const SpectreInstruction) }
+    }
+
+    pub fn push_stack<V>(&mut self, value: V) {
+        // store value on the stack then decrement
+        unsafe { write_volatile(self.1 as *mut V, value) }
+        self.1 -= size_of::<V>() as u64;
+    }
+
+    pub fn pop_stack<V>(&mut self, mut v: V) {
+        // instead of reading at SP, read at SP + sizeof V
+        let read_location = self.1 + size_of::<V>() as u64;
+        v = unsafe { read_volatile(read_location as *const V) };
+        self.1 += size_of::<V>() as u64;
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default, new)]
@@ -112,6 +143,10 @@ impl Default for IComplex {
         }
     }
 }
+
+/*
+    An executor is an FSM with instruction addr, stack addr
+*/
 
 impl Default for DComplex {
     fn default() -> Self {

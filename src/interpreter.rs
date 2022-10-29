@@ -4,6 +4,10 @@ use phantasm_ir::spectre_ir::*;
 
 /// Interpreter for phantasm IR
 pub fn eval_instructions(instructions: Vec<SpectreInstruction>) {
+    // each time you execute an instruction, you add size of instruction
+    // on instructions to do execution, usually stack pop or push or read from some address
+    // on instructions for control flow
+
     instructions.iter().for_each(|instruction| {
         match instruction.0 {
             Instruction0::I => {},

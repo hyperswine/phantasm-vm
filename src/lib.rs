@@ -1,3 +1,5 @@
+#![feature(core_intrinsics)]
+
 pub mod interpreter;
 pub mod vm;
 pub mod imperative;
