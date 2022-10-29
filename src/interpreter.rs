@@ -4,16 +4,27 @@ use phantasm_ir::spectre_ir::*;
 
 /// Interpreter for phantasm IR
 pub fn eval_instructions(instructions: Vec<SpectreInstruction>) {
-    instructions.iter().for_each(|f| match f {
-        SpectreInstruction::Arithemtic(a, b, c) => todo!(),
-        SpectreInstruction::Bitwise(b) => todo!(),
-        SpectreInstruction::Jump(a) => todo!(),
-        SpectreInstruction::Yield => todo!(),
-        SpectreInstruction::Return => todo!(),
+    instructions.iter().for_each(|instruction| {
+        match instruction.0 {
+            Instruction0::I => {},
+            Instruction0::D => {},
+        }
+        match instruction.1 {
+            Instruction1::Arithemtic(_, _, _) => (),
+            Instruction1::Bitwise(_) => (),
+            Instruction1::Spawn(_) => (),
+            Instruction1::Jump(_) => (),
+            Instruction1::Yield => (),
+            Instruction1::Return => (),
+        }
+        match instruction.2 {
+            Instruction2::Scalar => (),
+            Instruction2::Vector => (),
+        }
     });
 }
 
 #[test]
 fn test_instructions() {
-    println!("Ins")
+    println!("Instruction")
 }
