@@ -10,4 +10,4 @@ license-file = "LICENSE"
 phantasm-ir = { git = "https://github.com/hyperswine/phantasm.git" }
 derive-new = "0.5"
 macro_rules_attribute = "0.1"
-clap = "4"
+clap = { version = "4", features = ["derive"] }

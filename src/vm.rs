@@ -6,6 +6,7 @@ use derive_new::new;
 
 derive_alias! {
     #[derive(Defaults!)] = #[derive(Debug, Clone, Copy, new)];
+    #[derive(Complete!)] = #[derive(Debug, Clone, Copy, Default, new)];
 }
 
 pub type Byte = u8;
