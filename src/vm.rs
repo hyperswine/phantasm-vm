@@ -3,6 +3,9 @@
 */
 
 use derive_new::new;
+use phantasm_ir::spectre_ir::Instructions;
+
+use crate::interpreter::eval_instructions;
 
 derive_alias! {
     #[derive(Defaults!)] = #[derive(Debug, Clone, Copy, new)];
@@ -122,4 +125,15 @@ impl Default for DComplex {
 #[test]
 fn test_mpu() {
     let mpu = MainProcessingUnit::default();
+}
+
+/*
+    Runner
+*/
+
+/// Start a VM process and run it with a set of instructions
+pub fn run_vm(instructions: Instructions) {
+    let mpu = MainProcessingUnit::default();
+
+    eval_instructions(instructions.0);
 }

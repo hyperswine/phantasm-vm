@@ -1,6 +1,6 @@
 use phantasm_ir::spectre_ir::*;
 
-// pretty much the view of each individual processor
+// pretty much the view of each individual executor
 
 /// Interpreter for phantasm IR
 pub fn eval_instructions(instructions: Vec<SpectreInstruction>) {
