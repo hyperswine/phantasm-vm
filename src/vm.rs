@@ -97,6 +97,13 @@ impl Executor {
         v = unsafe { read_volatile(read_location as *const V) };
         self.1 += size_of::<V>() as u64;
     }
+
+    // read from arbitrary address from other thing for stuff?
+
+    // jump to some arbitrary address
+    pub fn jump(&mut self, addr: u64) {
+        self.2 = addr;
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default, new)]
@@ -170,5 +177,7 @@ fn test_mpu() {
 pub fn run_vm(instructions: Instructions) {
     let mpu = MainProcessingUnit::default();
 
-    eval_instructions(instructions.0);
+    // scheduler?
+
+    // eval_instructions(instructions.0);
 }

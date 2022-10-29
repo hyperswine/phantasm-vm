@@ -1,12 +1,15 @@
 use phantasm_ir::spectre_ir::*;
 
+use crate::vm::Executor;
+
 // pretty much the view of each individual executor
 
 /// Interpreter for phantasm IR
-pub fn eval_instructions(instructions: Vec<SpectreInstruction>) {
+pub fn eval_instructions(executor: &mut Executor, instructions: Vec<SpectreInstruction>) {
     // each time you execute an instruction, you add size of instruction
     // on instructions to do execution, usually stack pop or push or read from some address
     // on instructions for control flow
+    // the executor combinatory
 
     instructions.iter().for_each(|instruction| {
         match instruction.0 {
@@ -14,10 +17,10 @@ pub fn eval_instructions(instructions: Vec<SpectreInstruction>) {
             Instruction0::D => {},
         }
         match instruction.1 {
-            Instruction1::Arithemtic(_, _, _) => (),
-            Instruction1::Bitwise(_) => (),
-            Instruction1::Spawn(_) => (),
-            Instruction1::Jump(_) => (),
+            Instruction1::Arithemtic(a, b, c) => (),
+            Instruction1::Bitwise(a) => (),
+            Instruction1::Spawn(addr) => (),
+            Instruction1::Jump(addr) => (),
             Instruction1::Yield => (),
             Instruction1::Return => (),
         }
