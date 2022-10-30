@@ -9,8 +9,6 @@ use std::{
     ptr::{read_volatile, write_volatile},
 };
 
-use crate::interpreter::eval_instructions;
-
 derive_alias! {
     #[derive(Defaults!)] = #[derive(Debug, Clone, Copy, new)];
     #[derive(Complete!)] = #[derive(Debug, Clone, Copy, Default, new)];
@@ -25,6 +23,11 @@ impl<const SIZE: usize> Default for Cache<SIZE> {
     fn default() -> Self {
         Self([0 as Byte; SIZE])
     }
+}
+
+#[derive(Defaults!)]
+pub struct MainMemory {
+    memory: [Byte; 10_0000],
 }
 
 pub type Cache20MB = Cache<20_000_000>;
