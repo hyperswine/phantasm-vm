@@ -3,7 +3,7 @@
 */
 
 use derive_new::new;
-use phantasm_ir::spectre_ir::{Instructions, SpectreInstruction};
+use phantasm_ir::spectre_ir::SpectreInstruction;
 use std::{
     intrinsics::size_of,
     ptr::{read_volatile, write_volatile},
@@ -16,22 +16,29 @@ derive_alias! {
 
 pub type Byte = u8;
 
-#[derive(Debug, Clone, Copy, new)]
-pub struct Cache<const SIZE: usize>([Byte; SIZE]);
+/*
+    Could try to emulate the speed of each cache, but nah
+    Wait cant we just use the main memory for everything then? Yea cause its just SP
+    Well it might still help depending on how... for now just keep it like this...
+*/
 
-impl<const SIZE: usize> Default for Cache<SIZE> {
-    fn default() -> Self {
-        Self([0 as Byte; SIZE])
-    }
+pub fn new_local_cache_20_kilobytes() -> LocalCache {
+    vec![0; 20_000]
 }
 
-#[derive(Defaults!)]
-pub struct MainMemory {
-    memory: [Byte; 10_0000],
+pub fn new_universal_cache_20_megabytes() -> UniversalCache {
+    vec![0; 20_000_000]
 }
 
-pub type Cache20MB = Cache<20_000_000>;
-pub type Cache20KB = Cache<20_000>;
+pub type UniversalCache = Memory;
+pub type LocalCache = Memory;
+
+pub type Memory = Vec<Byte>;
+pub type MainMemory = Memory;
+
+pub fn new_main_memory_2_gigabytes() -> MainMemory {
+    vec![0; 2_000_000_000]
+}
 
 #[derive(Debug, Clone, Copy, new)]
 pub struct ExecutorComplexes([ExecutorComplex; 128]);
@@ -42,9 +49,9 @@ impl Default for ExecutorComplexes {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default, new)]
+#[derive(Debug, Clone, Default, new)]
 pub struct MainProcessingUnit {
-    global_cache: Cache20KB,
+    global_cache: UniversalCache,
     executor_complexes: ExecutorComplexes,
 }
 
@@ -73,6 +80,7 @@ pub enum ExecutorType {
     #[default]
     IExecutor,
     DExecutor,
+    HExecutor,
 }
 
 pub type StackPointer = u64;
@@ -127,12 +135,12 @@ pub enum AcceleratorUnit {
 #[derive(Debug, Clone, Copy, Default, new)]
 pub struct AcceleratorQueue(CircularBuffer<Function, 128>);
 
-#[derive(Debug, Clone, Copy, new)]
+#[derive(Debug, Clone, new)]
 pub struct IComplex {
     queue: CircularBuffer<Function, 256>,
     executors: [Executor; 64],
     accelerator_queue: AcceleratorQueue,
-    local_cache: Cache20KB,
+    local_cache: LocalCache,
     accelerators: [AcceleratorUnit; 32],
 }
 
@@ -140,6 +148,7 @@ pub struct IComplex {
 pub struct DComplex {
     queue: CircularBuffer<Function, 256>,
     executors: [Executor; 64],
+    accelerators: [AcceleratorUnit; 32],
 }
 
 impl Default for IComplex {
@@ -163,24 +172,16 @@ impl Default for DComplex {
         Self {
             queue: Default::default(),
             executors: [Default::default(); 64],
+            accelerators: [Default::default(); 32]
         }
     }
 }
 
+/*
+    Testing
+*/
+
 #[test]
 fn test_mpu() {
     let mpu = MainProcessingUnit::default();
-}
-
-/*
-    Runner
-*/
-
-/// Start a VM process and run it with a set of instructions
-pub fn run_vm(instructions: Instructions) {
-    let mpu = MainProcessingUnit::default();
-
-    // scheduler?
-
-    // eval_instructions(instructions.0);
 }

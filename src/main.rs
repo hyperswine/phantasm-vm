@@ -5,6 +5,7 @@
 use std::fs::read_to_string;
 use clap::{self, Parser};
 use phantasm_ir::spectre_ir::Instructions;
+use rei_vm::vm::{MainMemory, new_main_memory_2_gigabytes};
 
 #[derive(clap::Parser)]
 struct Args {
@@ -34,13 +35,15 @@ fn main() -> Result<(), ()> {
             // let bios = read_to_string("firmware/bin").expect("Couldn't read the BIOS software");
             // deserialise into Vec<SpectreInstruction>
             // let program: Vec<SpectreInstruction> = bios;
+            let main_memory = new_main_memory_2_gigabytes();
 
-            let bios = std::fs::read("firmware/bin").unwrap();
+            // let bios = std::fs::read("firmware/bin").unwrap();
             // let bios = efficient_assemble(bios);
             // basically, bincode deserialize
-            let program: Instructions = bincode::deserialize(&bios).unwrap();
+            // let program: Instructions = bincode::deserialize(&bios).unwrap();
 
             // REPL or runner
+            println!("Done!");
         }
     }
 
