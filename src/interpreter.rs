@@ -1,6 +1,9 @@
-use phantasm_ir::spectre_ir::*;
+use phantasm_ir::spectre_ir::{*, self};
 
-use crate::vm::Executor;
+use crate::vm::{phantasm_system, Executor};
+use Instruction0::*;
+use Instruction1::*;
+use Instruction2::*;
 
 // pretty much the view of each individual executor
 
@@ -13,8 +16,8 @@ pub fn eval_instructions(executor: &mut Executor, instructions: Vec<SpectreInstr
 
     instructions.iter().for_each(|instruction| {
         match instruction.0 {
-            Instruction0::I => {},
-            Instruction0::D => {},
+            Instruction0::I => {}
+            Instruction0::D => {}
         }
         match instruction.1 {
             Instruction1::Arithemtic(a, b, c) => (),
@@ -33,5 +36,10 @@ pub fn eval_instructions(executor: &mut Executor, instructions: Vec<SpectreInstr
 
 #[test]
 fn test_instructions() {
-    println!("Instruction")
+    println!("Testing Basic Instructions");
+    let phantasm_system = phantasm_system();
+    // precond: SP of executor0 is X
+    let instructions_to_execute = vec![SpectreInstruction(I, Jump(spectre_ir::Jump::Address), Scalar)];
+    // execute
+    // postcond: SP of executor0 is the address specified (loaded in)
 }

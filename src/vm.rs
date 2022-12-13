@@ -16,11 +16,28 @@ derive_alias! {
 
 pub type Byte = u8;
 
+pub trait HighLevelPrint {
+    fn print_details(&self);
+}
+
 /*
     Could try to emulate the speed of each cache, but nah
     Wait cant we just use the main memory for everything then? Yea cause its just SP
     Well it might still help depending on how... for now just keep it like this...
 */
+
+/*
+    Full System
+*/
+
+pub struct PhantasmSystem {
+    mpu: MainProcessingUnit,
+    main_memory: MainMemory
+}
+
+pub fn phantasm_system() -> PhantasmSystem {
+    PhantasmSystem { mpu: new_mpu(), main_memory: new_main_memory_2_gigabytes() }
+}
 
 pub fn new_local_cache_20_kilobytes() -> LocalCache {
     vec![0; 20_000]
@@ -40,19 +57,44 @@ pub fn new_main_memory_2_gigabytes() -> MainMemory {
     vec![0; 2_000_000_000]
 }
 
-#[derive(Debug, Clone, Copy, new)]
-pub struct ExecutorComplexes([ExecutorComplex; 128]);
+#[derive(Debug, Clone, new)]
+pub struct MainProcessingUnit {
+    global_cache: UniversalCache,
+    executor_complexes: Vec<ExecutorComplex>,
+}
 
-impl Default for ExecutorComplexes {
-    fn default() -> Self {
-        Self([Default::default(); 128])
+impl HighLevelPrint for MainProcessingUnit {
+    fn print_details(&self) {
+        println!("MPU STATs");
+        println!("global_cache length = {:?}", self.global_cache.len());
+        println!(
+            "executor_complexes count = {}",
+            self.executor_complexes.len()
+        );
+        // status active
+        self.executor_complexes
+            .iter()
+            .for_each(|c| println!("status: Active"));
     }
 }
 
-#[derive(Debug, Clone, Default, new)]
-pub struct MainProcessingUnit {
-    global_cache: UniversalCache,
-    executor_complexes: ExecutorComplexes,
+/// Create an MPU with 8 executor complexes, 4 I and 4 D
+pub fn new_mpu() -> MainProcessingUnit {
+    // half instruction, half data, alternating
+    // let executor_complexes = vec![ExecutorComplex];
+    let mut complexes = Vec::<ExecutorComplex>::new();
+    for i in 0..8 {
+        let complex = if i % 2 == 0 {
+            ExecutorComplex::IComplex
+        } else {
+            ExecutorComplex::DComplex
+        };
+        complexes.push(complex)
+    }
+    MainProcessingUnit {
+        global_cache: new_universal_cache_20_megabytes(),
+        executor_complexes: complexes,
+    }
 }
 
 #[derive(Debug, Clone, Copy, new)]
@@ -86,6 +128,7 @@ pub enum ExecutorType {
 pub type StackPointer = u64;
 pub type InstructionPointer = u64;
 
+/// A general purpose executor that executes a certain instruction, either type I or D
 #[derive(Debug, Clone, Copy, Default, new)]
 pub struct Executor(ExecutorType, StackPointer, InstructionPointer);
 
@@ -157,22 +200,18 @@ impl Default for IComplex {
             queue: Default::default(),
             executors: [Default::default(); 64],
             accelerator_queue: Default::default(),
-            local_cache: Default::default(),
+            local_cache: new_local_cache_20_kilobytes(),
             accelerators: Default::default(),
         }
     }
 }
-
-/*
-    An executor is an FSM with instruction addr, stack addr
-*/
 
 impl Default for DComplex {
     fn default() -> Self {
         Self {
             queue: Default::default(),
             executors: [Default::default(); 64],
-            accelerators: [Default::default(); 32]
+            accelerators: [Default::default(); 32],
         }
     }
 }
@@ -183,5 +222,6 @@ impl Default for DComplex {
 
 #[test]
 fn test_mpu() {
-    let mpu = MainProcessingUnit::default();
+    let mpu = new_mpu();
+    mpu.print_details();
 }
