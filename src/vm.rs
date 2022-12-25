@@ -1,3 +1,5 @@
+use derive_new::new;
+
 /*
     High Level VM
     Features:
@@ -6,37 +8,27 @@
     - multi process, stack based. Allows configuration with ASID tagging of functions
 */
 
-use derive_new::new;
-use std::{
-    intrinsics::size_of,
-    ptr::{read_volatile, write_volatile},
-};
-
-derive_alias! {
-    #[derive(Defaults!)] = #[derive(Debug, Clone, Copy, new)];
-    #[derive(Complete!)] = #[derive(Debug, Clone, Copy, Default, new)];
-}
-
 pub type Byte = u8;
-
-pub type UniversalCache = Memory;
-pub type LocalCache = Memory;
-
 pub type Memory = Vec<Byte>;
-pub type MainMemory = Memory;
 
-pub fn new_main_memory_2_gigabytes() -> MainMemory {
+pub fn new_main_memory_2_gigabytes() -> Memory {
     vec![0; 2_000_000_000]
 }
 
 pub struct PhantasmSystem {
-    main_memory: MainMemory,
+    main_memory: Memory,
 }
 
 /*
     Utility
 */
 
-pub trait HighLevelPrint {
+derive_alias! {
+    #[derive(Defaults!)] = #[derive(Debug, Clone, Copy, new)];
+    #[derive(Complete!)] = #[derive(Debug, Clone, Copy, Default, new)];
+}
+
+// could also just impl Display for PhantasmSystem
+pub trait MachineStateDisplay {
     fn print_details(&self);
 }

@@ -15,6 +15,7 @@ struct Args {
 enum Action {
     Compile,
     Run,
+    Repl,
 }
 
 fn main() -> Result<(), ()> {
@@ -23,14 +24,18 @@ fn main() -> Result<(), ()> {
     match args.action {
         Action::Compile => {
             // if compile BIOS, compile the firmware...
-            println!("Compiling BIOS...")
+            println!("Compiling BIOS...");
+
+            // call prei to compile firmware/bios
         },
         Action::Run => {
             println!("Welcome to Rei VM!");
             println!("Running the default BIOS...");
 
-            // REPL or runner
             println!("Done!");
+        }
+        Action::Repl => {
+            println!("Rei REPL v0");
         }
     }
 
