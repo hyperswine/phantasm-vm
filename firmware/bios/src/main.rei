@@ -1,6 +1,6 @@
-use elf
-use riscv
-use arm
+use elf::*
+use riscv::*
+use arm::*
 
 // log is implemented on core:: for riscv and arm at specific serial addresses
 // you can reimpl or load your own logger with a custom serial addr or another method
@@ -35,7 +35,7 @@ main: () {
 
 // allow anonymous object to statically checked. Can only be dynamically checked with std?
 // actually no, just use the CPU settings object
-const DEFAULT_SETTINGS = Cpu::Settings {
+DEFAULT_SETTINGS: Cpu::Settings {
     // on arm, there is 2 tables, check those too
     translation_table_on = false
     // etc... exceptions and stuff
@@ -43,8 +43,8 @@ const DEFAULT_SETTINGS = Cpu::Settings {
     nmi_exceptions_on = false
 }
 
-const ARCBOOT_IMAGE_PATH = "/sys/kernel/arcboot"
-const NEUTRONFS_UUID = 64xNEUTRONFS_0000...
+ARCBOOT_IMAGE_PATH: "/sys/kernel/arcboot"
+NEUTRONFS_UUID: 64xNEUTRONFS_0000...
 
 boot: (drive: Drive) -> Status {
     // if drive isnt GPT, then no boot
